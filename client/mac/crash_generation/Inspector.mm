@@ -76,7 +76,7 @@ void Inspector::Inspect(const char *receive_port_name) {
       if (wrote_minidump) {
         // Ask the user if he wants to upload the crash report to a server,
         // and do so if he agrees.
-        LaunchReporter(config_file_.GetFilePath());
+        // LaunchReporter(config_file_.GetFilePath());
       } else {
         fprintf(stderr, "Inspection of crashed process failed\n");
       }
