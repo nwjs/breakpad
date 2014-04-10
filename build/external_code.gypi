@@ -27,57 +27,38 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 {
-  'includes': [
-    '../../../build/common.gypi',
-  ],
-  'target_defaults': {
-  },
-  'targets': [
-    {
-      'target_name': 'gtest',
-      'type': 'static_library',
-      'include_dirs': [
-        '<(DEPTH)/testing/include',
-        '<(DEPTH)/testing/gtest',
-        '<(DEPTH)/testing/gtest/include',
-      ],
-      'sources': [
-        '<(DEPTH)/testing/gtest/src/gtest-all.cc',
-      ],
-      'direct_dependent_settings': {
-        'include_dirs': [
-          '<(DEPTH)/testing/include',
-          '<(DEPTH)/testing/gtest/include',
+  'conditions': [
+    [ 'OS=="linux"', {
+      'target_defaults': {
+        'cflags!': [
+          '-Wall',
+          '-Werror',
         ],
-        # Visual C++ implements variadic templates strangely, and
-        # VC++2012 broke Google Test by lowering this value. See
-        # http://stackoverflow.com/questions/12558327/google-test-in-visual-studio-2012
-        'defines': ['_VARIADIC_MAX=10'],
       },
-      'defines': ['_VARIADIC_MAX=10'],
-    },
-    {
-      'target_name': 'gmock',
-      'type': 'static_library',
-      'include_dirs': [
-        '<(DEPTH)/testing/include',
-        '<(DEPTH)/testing/',
-        '<(DEPTH)/testing/gtest',
-        '<(DEPTH)/testing/gtest/include',
-      ],
-      'sources': [
-        '<(DEPTH)/testing/src/gmock-all.cc',
-        '<(DEPTH)/testing/src/gmock_main.cc',
-      ],
-      'direct_dependent_settings': {
-        'include_dirs': [
-          '<(DEPTH)/testing/include',
-          '<(DEPTH)/testing/gtest/include',
+    }],
+    [ 'OS=="win"', {
+      'target_defaults': {
+        'defines': [
+          '_CRT_SECURE_NO_DEPRECATE',
+          '_CRT_NONSTDC_NO_WARNINGS',
+          '_CRT_NONSTDC_NO_DEPRECATE',
         ],
-        'defines': ['_VARIADIC_MAX=10'],
+        'msvs_disabled_warnings': [4800],
+        'msvs_settings': {
+          'VCCLCompilerTool': {
+            'WarnAsError': 'false',
+            'Detect64BitPortabilityProblems': 'false',
+          },
+        },
       },
-      'defines': ['_VARIADIC_MAX=10'],
-    },
-
+    }],
+    [ 'OS=="mac"', {
+      'target_defaults': {
+        'xcode_settings': {
+          'GCC_TREAT_WARNINGS_AS_ERRORS': 'NO',
+          'WARNING_CFLAGS!': ['-Wall'],
+        },
+      },
+    }],
   ],
 }
