@@ -355,10 +355,10 @@ bool Breakpad::Initialize(NSDictionary *parameters) {
     return false;
   }
 
-  if ([[parameters objectForKey:@BREAKPAD_IN_PROCESS] boolValue])
+  //if ([[parameters objectForKey:@BREAKPAD_IN_PROCESS] boolValue])
     return InitializeInProcess(parameters);
-  else
-    return InitializeOutOfProcess(parameters);
+  //else
+  //  return InitializeOutOfProcess(parameters);
 }
 
 //=============================================================================
@@ -447,8 +447,6 @@ bool Breakpad::ExtractParameters(NSDictionary *parameters) {
   NSString *interval = [parameters objectForKey:@BREAKPAD_REPORT_INTERVAL];
   NSString *inspectorPathString =
       [parameters objectForKey:@BREAKPAD_INSPECTOR_LOCATION];
-  NSString *reporterPathString =
-      [parameters objectForKey:@BREAKPAD_REPORTER_EXE_LOCATION];
   NSString *timeout = [parameters objectForKey:@BREAKPAD_CONFIRM_TIMEOUT];
   NSArray  *logFilePaths = [parameters objectForKey:@BREAKPAD_LOGFILES];
   NSString *logFileTailSize =
@@ -537,7 +535,7 @@ bool Breakpad::ExtractParameters(NSDictionary *parameters) {
 
   // Find the helper applications if not specified in user config.
   NSString *resourcePath = nil;
-  if (!inspectorPathString || !reporterPathString) {
+  if (!inspectorPathString) {
     resourcePath = GetResourcePath();
     if (!resourcePath) {
       return false;
@@ -555,6 +553,7 @@ bool Breakpad::ExtractParameters(NSDictionary *parameters) {
     return false;
   }
 
+#if 0
   // Find Reporter.
   if (!reporterPathString) {
     reporterPathString =
@@ -569,7 +568,7 @@ bool Breakpad::ExtractParameters(NSDictionary *parameters) {
              fileExistsAtPath:reporterPathString]) {
     return false;
   }
-
+#endif
   if (!dumpSubdirectory) {
     dumpSubdirectory = @"";
   }
@@ -603,8 +602,6 @@ bool Breakpad::ExtractParameters(NSDictionary *parameters) {
   dictionary.SetKeyValue(BREAKPAD_CONFIRM_TIMEOUT, [timeout UTF8String]);
   dictionary.SetKeyValue(BREAKPAD_INSPECTOR_LOCATION,
                          [inspectorPathString fileSystemRepresentation]);
-  dictionary.SetKeyValue(BREAKPAD_REPORTER_EXE_LOCATION,
-                         [reporterPathString fileSystemRepresentation]);
   dictionary.SetKeyValue(BREAKPAD_LOGFILE_UPLOAD_SIZE,
                          [logFileTailSize UTF8String]);
   dictionary.SetKeyValue(BREAKPAD_REQUEST_COMMENTS,
